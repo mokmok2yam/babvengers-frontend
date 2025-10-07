@@ -1,0 +1,252 @@
+.app {
+    font-family: Arial, sans-serif;
+    background-color: #fff9e6;
+    color: #333;
+    min-height: 100vh;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff9e6;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .logo {
+    width: 40px;
+    height: auto;
+    margin-right: 10px;
+  }
+
+  .brand h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+  }
+
+  .menu-toggle {
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .nav {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100%;
+    background: #fff;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+    padding: 20px;
+  }
+
+  .nav.open {
+    display: block;
+  }
+
+  .nav ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .nav ul li {
+    margin: 10px 0;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+
+  .auth-buttons {
+    margin-left: auto;
+  }
+
+  .auth-buttons button {
+    margin-left: 10px;
+    padding: 5px 15px;
+    cursor: pointer;
+  }
+
+  .slider {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    background: #fff9e6;
+    margin-bottom: 20px;
+  }
+
+  .slide {
+    width: 250px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .slide:hover {
+    transform: scale(1.05);
+  }
+
+  .slide h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+  }
+
+  .search-bar {
+    padding: 20px;
+    background: #fff9e6;
+    display: flex;
+    justify-content: center;
+  }
+
+  .search-bar input {
+    padding: 5px;
+    width: 200px;
+    margin-right: 10px;
+  }
+
+  .search-bar button {
+    padding: 5px 15px;
+  }
+
+  .assemble-section {
+    padding: 20px;
+    background: #fff9e6;
+    margin-bottom: 20px;
+  }
+
+  .intro {
+    padding: 20px;
+    background: #fff;
+    margin-bottom: 20px;
+  }
+
+  .intro-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .intro-image {
+    width: 200px;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .recommended-places {
+    padding: 20px;
+    background: #fff9e6;
+  }
+
+  .recommended-places h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .place-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .place-item {
+    background: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .place-item h3 {
+    margin: 0 0 10px;
+  }
+
+  .place-item p {
+    margin: 0 0 10px;
+  }
+
+  .place-item button {
+    padding: 5px 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    background: #fff9e6;
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+    width: 300px;
+  }
+
+  .modal-content .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+
+  .modal-content label {
+    display: block;
+    margin: 10px 0 5px;
+  }
+
+  .modal-content input,
+  .modal-content select {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+  }
+
+  .birth-date {
+    display: flex;
+    gap: 10px;
+  }
+
+  .birth-date select {
+    width: 33%;
+  }
+
+  .modal-content button {
+    padding: 5px 15px;
+    margin-right: 10px;
+  }
