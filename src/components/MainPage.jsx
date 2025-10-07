@@ -3,33 +3,27 @@ import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Slider from './Slider';
 import AssembleSection from './AssembleSection';
-import RecommendedPlaces from './RecommendedPlaces';
 import client from '../api/client';
 
 function MainPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onLogout }) {
   const navigate = useNavigate();
   
-  // 지도 목록을 저장할 상태
   const [topRatedMaps, setTopRatedMaps] = useState([]);
   const [mostReviewedMaps, setMostReviewedMaps] = useState([]);
-
-  // 관리자 선정 더미 데이터
   const adminPicks = [
     { id: 0, name: '스윙스가 인정한 돈까스', averageRating: 5.0, reviewCount: 99, nickname: '밥벤저스' },
     { id: 1, name: '혼밥하기 좋은 국밥집', averageRating: 4.8, reviewCount: 102, nickname: '밥벤저스' },
   ];
 
   useEffect(() => {
-    // 별점 높은 지도 데이터 불러오기
     client.get('/map-collections?sortBy=averageRating')
       .then(response => setTopRatedMaps(response.data))
       .catch(error => console.error("별점 높은 지도 로딩 실패:", error));
 
-    // 리뷰 많은 지도 데이터 불러오기
     client.get('/map-collections?sortBy=reviewCount')
       .then(response => setMostReviewedMaps(response.data))
       .catch(error => console.error("리뷰 많은 지도 로딩 실패:", error));
-  }, []); // 페이지가 처음 로드될 때 한 번만 실행
+  }, []);
 
   return (
     <>
@@ -66,7 +60,6 @@ function MainPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onLogout
             </div>
           </div>
         </section>
-        <RecommendedPlaces />
       </main>
     </>
   );
