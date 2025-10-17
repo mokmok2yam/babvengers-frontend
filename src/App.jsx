@@ -7,7 +7,7 @@ import SignupModal from './components/SignupModal';
 import MyMapsPage from './components/MyMapsPage';
 import MapDetailPage from './components/MapDetailPage';
 import CommunityMapsPage from './components/CommunityMapsPage';
-// import SearchPage from './components/SearchPage'; // 👈 1. 임포트 삭제
+import MyAssemblePage from './components/MyAssemblePage';
 import './App.css';
 
 function App() {
@@ -61,7 +61,10 @@ function App() {
           path="/maps" 
           element={ <CommunityMapsPage isLoggedIn={isLoggedIn} loginUser={loginUser} onLoginClick={() => setIsLoginOpen(true)} onSignupClick={() => setIsSignupOpen(true)} onLogout={handleLogout} /> } 
         />
-        {/* 👇 2. /search 경로 삭제 */}
+        <Route 
+          path="/my-assemble" 
+          element={ <MyAssemblePage isLoggedIn={isLoggedIn} loginUser={loginUser} onLoginClick={() => setIsLoginOpen(true)} onSignupClick={() => setIsSignupOpen(true)} onLogout={onLogout} /> } 
+        />
       </Routes>
 
       <LoginModal 

@@ -14,9 +14,10 @@ function Header({ onLoginClick, onSignupClick, nickname, onHomeClick, isLoggedIn
       <nav className={isMenuOpen ? 'nav open' : 'nav'}>
         <span className="close-btn" onClick={() => setIsMenuOpen(false)}>✕</span>
         <ul>
-          {/* 👇 '맛집 지도'를 Link로 변경 */}
           <li><Link to="/maps" onClick={() => setIsMenuOpen(false)}>맛집 지도</Link></li>
           <li><Link to="/my-maps" onClick={() => setIsMenuOpen(false)}>내 지도 관리</Link></li>
+          <li><Link to="/my-reviews" onClick={() => setIsMenuOpen(false)}>내 리뷰 관리</Link></li>
+          <li><Link to="/my-assemble" onClick={() => setIsMenuOpen(false)}>내 어셈블 관리</Link></li>
           <li>고객센터</li>
         </ul>
       </nav>

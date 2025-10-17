@@ -77,6 +77,7 @@ function MapDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onL
 
   useEffect(() => {
     if (!mapInstance || markers.length === 0 || !infowindow || !mapData) return;
+    if(currentIndex >= mapData.restaurants.length) return;
     const marker = markers[currentIndex];
     const restaurant = mapData.restaurants[currentIndex];
     mapInstance.panTo(marker.getPosition());
@@ -111,6 +112,24 @@ function MapDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onL
     } catch (error) {
       console.error("리뷰 등록 실패:", error);
       alert("리뷰 등록에 실패했습니다.");
+    }
+  };
+
+  const handleMatchingRequest = async () => {
+    if (!isLoggedIn) {
+      alert("로그인이 필요합니다.");
+      onLoginClick();
+      return;
+    }
+    const requestData = { senderId: currentUser.userId, receiverId: mapData.authorId, mapCollectionId: mapData.id };
+    if (window.confirm(`'${mapData.nickname}'님에게 이 지도를 기반으로 매칭을 요청하시겠습니까?`)) {
+      try {
+        await client.post('/matching', requestData);
+        alert("매칭 요청을 보냈습니다! '내 어셈블 관리' 페이지에서 요청 상태를 확인할 수 있습니다.");
+      } catch (error) {
+        console.error("매칭 요청 실패:", error);
+        alert("매칭 요청에 실패했습니다.");
+      }
     }
   };
 
@@ -154,8 +173,19 @@ function MapDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onL
     <>
       <Header isLoggedIn={isLoggedIn} nickname={loginUser?.nickname} onLoginClick={onLoginClick} onSignupClick={onSignupClick} onLogout={onLogout} onHomeClick={() => navigate('/')} />
       <div style={{ padding: '20px' }}>
-        <h2>{mapData.name}</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+          <h2>{mapData.name}</h2>
+          {isLoggedIn && currentUser?.userId !== mapData.authorId && (
+            <button
+              onClick={handleMatchingRequest}
+              style={{ background: '#28a745', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              🤝 어셈블 요청하기!
+            </button>
+          )}
+        </div>
         <p>작성자: {mapData.nickname}</p>
+
         <div id="detail-map" style={{ width: '100%', height: '400px', borderRadius: '10px', marginBottom: '20px' }}></div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
