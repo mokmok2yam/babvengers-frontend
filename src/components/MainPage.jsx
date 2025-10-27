@@ -17,12 +17,9 @@ function MainPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onLogout
 
   useEffect(() => {
     client.get('/map-collections?sortBy=averageRating')
-      .then(response => setTopRatedMaps(response.data))
-      .catch(error => console.error("별점 높은 지도 로딩 실패:", error));
-
+      .then(response => setTopRatedMaps(response.data));
     client.get('/map-collections?sortBy=reviewCount')
-      .then(response => setMostReviewedMaps(response.data))
-      .catch(error => console.error("리뷰 많은 지도 로딩 실패:", error));
+      .then(response => setMostReviewedMaps(response.data));
   }, []);
 
   return (
@@ -36,12 +33,16 @@ function MainPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onLogout
         onLogout={onLogout}
       />
       <main>
+        {/* 👇 1. AssembleSection을 Slider 위로 이동 */}
+        <AssembleSection onCreateMapClick={() => navigate('/my-map')} />
+        
+        {/* 👇 2. Slider를 AssembleSection 아래로 이동 */}
         <Slider 
           topRatedMaps={topRatedMaps}
           mostReviewedMaps={mostReviewedMaps}
           adminPicks={adminPicks}
         />
-        <AssembleSection onCreateMapClick={() => navigate('/my-map')} />
+        
         <section className="intro">
           <div className="intro-content">
             <img src="/eat food img.png" alt="Food Image" className="intro-image" />
