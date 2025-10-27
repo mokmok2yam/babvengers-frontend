@@ -8,6 +8,7 @@ import MyMapsPage from './components/MyMapsPage';
 import MapDetailPage from './components/MapDetailPage';
 import CommunityMapsPage from './components/CommunityMapsPage';
 import MyAssemblePage from './components/MyAssemblePage';
+import MyReviewsPage from './components/MyReviewsPage.jsx'; // 👈 1. 임포트 추가
 import './App.css';
 
 function App() {
@@ -63,7 +64,12 @@ function App() {
         />
         <Route 
           path="/my-assemble" 
-          element={ <MyAssemblePage isLoggedIn={isLoggedIn} loginUser={loginUser} onLoginClick={() => setIsLoginOpen(true)} onSignupClick={() => setIsSignupOpen(true)} onLogout={onLogout} /> } 
+          element={ <MyAssemblePage isLoggedIn={isLoggedIn} loginUser={loginUser} onLoginClick={() => setIsLoginOpen(true)} onSignupClick={() => setIsSignupOpen(true)} onLogout={handleLogout} /> } 
+        />
+        {/* 👇 2. '내 리뷰 관리' 페이지를 위한 Route 추가 */}
+        <Route 
+          path="/my-reviews" 
+          element={ <MyReviewsPage isLoggedIn={isLoggedIn} loginUser={loginUser} onLoginClick={() => setIsLoginOpen(true)} onSignupClick={() => setIsSignupOpen(true)} onLogout={handleLogout} /> } 
         />
       </Routes>
 
