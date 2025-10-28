@@ -91,7 +91,7 @@ function AssembleBoardPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick,
                   <div style={{ flexShrink: 0, marginTop: '5px' }}>
                     {post.status === '모집중' ? (
                         <button 
-                            onClick={(e) => { e.preventDefault(); handleApply(post.id, post.restaurantId); }} // Link의 이동을 막고 신청 로직 실행
+                            onClick={(e) => { e.stopPropagation(); handleApply(post.id, post.restaurantId); }} // 👈 수정: e.stopPropagation() 추가
                             style={{ background: '#28a745', color: 'white', border: 'none', padding: '8px 15px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
                             disabled={!isLoggedIn}
                         >
