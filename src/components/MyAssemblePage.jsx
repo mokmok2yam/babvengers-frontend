@@ -54,7 +54,7 @@ function MyAssemblePage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, on
     return (
       <>
         <Header isLoggedIn={isLoggedIn} nickname={loginUser?.nickname} onLoginClick={onLoginClick} onSignupClick={onSignupClick} onLogout={onLogout} onHomeClick={() => navigate('/')} />
-        <p style={{ padding: '20px' }}>매칭 정보를 불러오는 중...</p>
+        <p style={{ padding: '20px', textAlign: 'center' }}>매칭 정보를 불러오는 중...</p>
       </>
     );
   }
@@ -62,39 +62,69 @@ function MyAssemblePage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, on
   return (
     <>
       <Header isLoggedIn={isLoggedIn} nickname={loginUser?.nickname} onLoginClick={onLoginClick} onSignupClick={onSignupClick} onLogout={onLogout} onHomeClick={() => navigate('/')} />
-      <div style={{ padding: '20px' }}>
+      {/* ✨ 메인 콘텐츠 영역: 흰색 배경의 카드 스타일 적용 */}
+      <div style={{ 
+        padding: '30px 40px', 
+        maxWidth: '1000px', 
+        margin: '20px auto', 
+        backgroundColor: '#ffffff', 
+        borderRadius: '10px',
+        boxShadow: '0 4px 10px rgba(0,0,0,0.05)'
+      }}>
         <h2>내 어셈블 관리 🤝</h2>
 
         {/* 받은 요청 섹션 */}
         <section style={{ marginBottom: '40px' }}>
-          <h3>받은 요청</h3>
+          <h3 style={{ color: '#4CAF50' }}>받은 요청</h3>
           {receivedRequests.length > 0 ? (
             receivedRequests.map(req => (
-              <div key={req.id} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>
-                <p><strong>'{req.senderName}'</strong>님이 <strong>'{req.mapName}'</strong> 지도 기반으로 어셈블을 요청했습니다.</p>
-                <p>상태: {req.status}</p>
+              <div key={req.id} style={{ 
+                border: '1px solid #ddd', 
+                padding: '15px', 
+                borderRadius: '8px', 
+                marginBottom: '10px', 
+                backgroundColor: '#f9fff9', // 연한 녹색 계열 배경
+                boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
+              }}>
+                <p style={{ margin: '0 0 10px' }}>
+                  <strong>'{req.senderName}'</strong>님이 <Link to={`/map/${req.mapCollectionId}`} style={{ color: '#007bff' }}><strong>'{req.mapName}'</strong></Link> 지도 기반으로 어셈블을 요청했습니다.
+                </p>
+                <p style={{ fontWeight: 'bold', color: req.status === '요청됨' ? '#FF9800' : (req.status === '수락됨' ? '#28a745' : '#dc3545') }}>
+                    상태: {req.status}
+                </p>
                 {req.status === '요청됨' && (
                   <div>
-                    <button onClick={() => handleUpdateStatus(req.id, '수락됨')} style={{ background: '#28a745', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '3px', cursor: 'pointer', marginRight: '5px' }}>수락</button>
-                    <button onClick={() => handleUpdateStatus(req.id, '거절됨')} style={{ background: '#dc3545', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '3px', cursor: 'pointer' }}>거절</button>
+                    <button onClick={() => handleUpdateStatus(req.id, '수락됨')} style={{ background: '#28a745', color: 'white', border: 'none', padding: '8px 15px', borderRadius: '5px', cursor: 'pointer', marginRight: '8px' }}>수락</button>
+                    <button onClick={() => handleUpdateStatus(req.id, '거절됨')} style={{ background: '#dc3545', color: 'white', border: 'none', padding: '8px 15px', borderRadius: '5px', cursor: 'pointer' }}>거절</button>
                   </div>
                 )}
               </div>
             ))
-          ) : <p>받은 요청이 없습니다.</p>}
+          ) : <p style={{ padding: '15px', border: '1px dashed #ccc', borderRadius: '8px', textAlign: 'center', backgroundColor: '#f9f9f9' }}>받은 요청이 없습니다.</p>}
         </section>
 
         {/* 보낸 요청 섹션 */}
         <section>
-          <h3>보낸 요청</h3>
+          <h3 style={{ color: '#FF6B6B' }}>보낸 요청</h3>
           {sentRequests.length > 0 ? (
             sentRequests.map(req => (
-              <div key={req.id} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>
-                <p><strong>'{req.receiverName}'</strong>님에게 <strong>'{req.mapName}'</strong> 지도로 어셈블을 요청했습니다.</p>
-                <p>상태: {req.status}</p>
+              <div key={req.id} style={{ 
+                border: '1px solid #ddd', 
+                padding: '15px', 
+                borderRadius: '8px', 
+                marginBottom: '10px',
+                backgroundColor: '#fff9f9', // 연한 붉은 계열 배경
+                boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
+              }}>
+                <p style={{ margin: '0 0 10px' }}>
+                  <strong>'{req.receiverName}'</strong>님에게 <Link to={`/map/${req.mapCollectionId}`} style={{ color: '#007bff' }}><strong>'{req.mapName}'</strong></Link> 지도로 어셈블을 요청했습니다.
+                </p>
+                <p style={{ fontWeight: 'bold', color: req.status === '요청됨' ? '#FF9800' : (req.status === '수락됨' ? '#28a745' : '#dc3545') }}>
+                    상태: {req.status}
+                </p>
               </div>
             ))
-          ) : <p>보낸 요청이 없습니다.</p>}
+          ) : <p style={{ padding: '15px', border: '1px dashed #ccc', borderRadius: '8px', textAlign: 'center', backgroundColor: '#f9f9f9' }}>보낸 요청이 없습니다.</p>}
         </section>
       </div>
     </>

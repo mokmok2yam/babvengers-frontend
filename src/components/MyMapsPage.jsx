@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from './Header';
 import client from '../api/client';
-import { StarRatingDisplay } from './StarRating'; // 👈 1. 별점 컴포넌트 임포트
+import { StarRatingDisplay } from './StarRating';
 
 function MyMapsPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onLogout }) {
   const [myMaps, setMyMaps] = useState([]);
@@ -71,33 +71,84 @@ function MyMapsPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onLogo
         onLogout={onLogout}
         onHomeClick={() => navigate('/')}
       />
-      <div style={{ padding: '20px' }}>
+      {/* 메인 콘텐츠 영역: 흰색 배경의 카드 스타일 적용 */}
+      <div style={{ 
+        padding: '30px 40px', 
+        maxWidth: '1000px', 
+        margin: '20px auto', 
+        backgroundColor: '#ffffff', 
+        borderRadius: '10px',
+        boxShadow: '0 4px 10px rgba(0,0,0,0.05)'
+      }}>
         <h2>내 지도 관리 🗺️</h2>
         {isLoading ? (
-          <p>내 지도를 불러오는 중...</p>
+          <p style={{ textAlign: 'center' }}>내 지도를 불러오는 중...</p>
         ) : myMaps.length > 0 ? (
-          <ul>
+          <ul style={{ listStyle: 'none', padding: 0 }}>
             {myMaps.map((map) => (
-              <li key={map.id} style={{ marginBottom: '10px', border: '1px solid #ddd', padding: '10px', borderRadius: '5px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Link to={`/map/${map.id}`} style={{ textDecoration: 'none', color: 'black' }}>
-                    <strong>{map.name}</strong>
-                    {/* 👇 2. 별점 표시 컴포넌트 추가 */}
-                    <div style={{ marginTop: '5px' }}>
+              <li key={map.id} style={{ 
+                marginBottom: '15px', 
+                padding: '15px', 
+                borderRadius: '8px',
+                backgroundColor: '#fcfcfc', // 각 지도 항목의 연한 배경색
+                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                border: '1px solid #eee'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                  
+                  {/* 지도 정보 영역 */}
+                  <Link to={`/map/${map.id}`} style={{ textDecoration: 'none', color: '#333', flexGrow: 1, paddingRight: '20px' }}>
+                    <h3 style={{ margin: '0 0 5px', fontSize: '20px', color: '#FF9800' }}>{map.name}</h3>
+                    {/* 별점 표시 컴포넌트 */}
+                    <div style={{ marginTop: '5px', marginBottom: '8px' }}>
                       <StarRatingDisplay rating={map.averageRating} />
                     </div>
-                    <p style={{ margin: '5px 0 0', color: '#555' }}>{map.restaurants.length}개의 맛집 포함</p>
+                    {/* 👇 이 부분의 굵게 표시 마크다운을 제거했습니다. */}
+                    <p style={{ margin: '0', color: '#555', fontSize: '14px' }}>
+                      {map.restaurants.length}개의 맛집 포함
+                    </p>
                   </Link>
-                  <div>
-                    <button onClick={() => handleEdit(map.id, map.name)} style={{ background: '#4CAF50', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '3px', cursor: 'pointer', marginRight: '5px' }}>수정</button>
-                    <button onClick={() => handleDelete(map.id)} style={{ background: '#f44336', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '3px', cursor: 'pointer' }}>삭제</button>
+                  
+                  {/* 버튼 영역 */}
+                  <div style={{ flexShrink: 0, marginTop: '5px' }}>
+                    <button 
+                      onClick={() => handleEdit(map.id, map.name)} 
+                      style={{ 
+                        background: '#FFCD00', 
+                        color: '#333', 
+                        border: 'none', 
+                        padding: '5px 12px', 
+                        borderRadius: '4px', 
+                        cursor: 'pointer', 
+                        marginRight: '8px', 
+                        fontWeight: 'bold' 
+                      }}
+                    >
+                      수정
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(map.id)} 
+                      style={{ 
+                        background: '#f44336', 
+                        color: 'white', 
+                        border: 'none', 
+                        padding: '5px 12px', 
+                        borderRadius: '4px', 
+                        cursor: 'pointer',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      삭제
+                    </button>
                   </div>
                 </div>
               </li>
             ))}
           </ul>
         ) : (
-          <p>아직 저장한 지도가 없습니다. '나만의 지도 만들기'로 첫 지도를 만들어보세요!</p>
+          <p style={{ padding: '15px', border: '1px dashed #ccc', borderRadius: '8px', textAlign: 'center', backgroundColor: '#f9f9f9' }}>
+            아직 저장한 지도가 없습니다. '나만의 지도 만들기'로 첫 지도를 만들어보세요!
+          </p>
         )}
       </div>
     </>

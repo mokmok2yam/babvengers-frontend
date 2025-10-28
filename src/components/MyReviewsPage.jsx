@@ -79,36 +79,56 @@ function MyReviewsPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onL
   return (
     <>
       <Header isLoggedIn={isLoggedIn} nickname={loginUser?.nickname} onLoginClick={onLoginClick} onSignupClick={onSignupClick} onLogout={onLogout} onHomeClick={() => navigate('/')} />
-      <div style={{ padding: '20px' }}>
+      {/* ✨ 메인 콘텐츠 영역: 흰색 배경의 카드 스타일 적용 */}
+      <div style={{ 
+        padding: '30px 40px', 
+        maxWidth: '800px', 
+        margin: '20px auto', 
+        backgroundColor: '#ffffff', 
+        borderRadius: '10px',
+        boxShadow: '0 4px 10px rgba(0,0,0,0.05)'
+      }}>
         <h2>내 리뷰 관리 📝</h2>
+        
         {isLoading ? <p>리뷰를 불러오는 중...</p> : reviews.length > 0 ? (
           reviews.map((review) => (
-            <div key={review.reviewId} style={{ borderBottom: '1px solid #eee', padding: '15px 0' }}>
-              <p style={{ color: '#555', fontSize: '14px' }}>
-                📍 <Link to={`/map/${review.mapId}`}><strong>{review.mapName}</strong></Link> 지도에 작성한 리뷰
+            <div key={review.reviewId} style={{ 
+              marginBottom: '20px', 
+              border: '1px solid #ddd', 
+              padding: '15px', 
+              borderRadius: '8px',
+              backgroundColor: '#fcfcfc', // 각 리뷰 항목의 배경
+              boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+            }}>
+              <p style={{ color: '#555', fontSize: '14px', borderBottom: '1px dashed #ddd', paddingBottom: '10px', marginBottom: '10px' }}>
+                📍 <Link to={`/map/${review.mapId}`} style={{ color: '#007bff', fontWeight: 'bold' }}>{review.mapName}</Link> 지도에 작성한 리뷰
               </p>
               {editingReviewId === review.reviewId ? (
                 // 수정 모드
                 <div>
                   <StarRatingInput rating={editingRating} setRating={setEditingRating} />
-                  <textarea value={editingContent} onChange={(e) => setEditingContent(e.target.value)} style={{ width: '100%', minHeight: '60px', marginTop: '5px' }} />
-                  <button onClick={() => handleSaveEdit(review.reviewId)}>저장</button>
-                  <button onClick={handleCancelEdit} style={{ marginLeft: '5px' }}>취소</button>
+                  <textarea 
+                    value={editingContent} 
+                    onChange={(e) => setEditingContent(e.target.value)} 
+                    style={{ width: '100%', minHeight: '60px', marginTop: '10px', padding: '8px', border: '1px solid #FFCD00', borderRadius: '4px' }} 
+                  />
+                  <button onClick={() => handleSaveEdit(review.reviewId)} style={{ background: '#FFCD00', color: '#333', border: 'none', padding: '8px 15px', borderRadius: '5px', cursor: 'pointer', marginTop: '10px' }}>저장</button>
+                  <button onClick={handleCancelEdit} style={{ marginLeft: '5px', background: '#ccc', color: '#333', border: 'none', padding: '8px 15px', borderRadius: '5px', cursor: 'pointer', marginTop: '10px' }}>취소</button>
                 </div>
               ) : (
                 // 보기 모드
                 <div>
                   <StarRatingDisplay rating={review.rating} />
-                  <p>{review.content}</p>
+                  <p style={{ margin: '10px 0' }}>{review.content}</p>
                   <div>
-                    <button onClick={() => handleStartEdit(review)} style={{ marginRight: '5px' }}>수정</button>
-                    <button onClick={() => handleDeleteReview(review.reviewId)}>삭제</button>
+                    <button onClick={() => handleStartEdit(review)} style={{ marginRight: '5px', background: '#FFCD00', color: '#333', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>수정</button>
+                    <button onClick={() => handleDeleteReview(review.reviewId)} style={{ background: '#f44336', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>삭제</button>
                   </div>
                 </div>
               )}
             </div>
           ))
-        ) : <p>아직 작성한 리뷰가 없습니다.</p>}
+        ) : <p style={{ padding: '15px', border: '1px dashed #ccc', borderRadius: '8px', textAlign: 'center', backgroundColor: '#f9f9f9' }}>아직 작성한 리뷰가 없습니다.</p>}
       </div>
     </>
   );

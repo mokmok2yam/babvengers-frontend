@@ -1,6 +1,6 @@
 .app {
   font-family: Arial, sans-serif;
-  background-color: #fff9e6; /* 👈 이 노란색 배경을 유지합니다 */
+  background-color: #fff9e6; 
   color: #333;
   min-height: 100vh;
 }
@@ -92,10 +92,10 @@
 
 /* ===== MapListSection & Slider Styles (수정됨) ===== */
 
-/* 👇 흰색 배경, 그림자, 테두리 반경을 제거했습니다. */
+
 .map-list-section {
   width: 100%;
-  max-width: 1200px; 
+  max-width: 1400px; 
   margin: 30px auto;
   padding: 20px 10px;
   box-sizing: border-box;
@@ -120,7 +120,7 @@
   justify-content: space-between;
 }
 
-/* 👇 화살표 버튼 스타일 (흰색 배경 유지) */
+
 .slider-nav-btn {
   background-color: #ffffff; /* 버튼은 흰색으로 유지 */
   border: 1px solid #ddd;
@@ -160,7 +160,7 @@
   margin-left: 10px;
 }
 
-/* 👇 슬라이더(그리드) 스타일 */
+
 .slider {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -171,7 +171,7 @@
   flex-grow: 1;
   
   /* 기존 스타일 덮어쓰기 */
-  background: transparent; /* 👈 slider 자체의 배경도 투명하게 */
+  background: transparent; 
   justify-content: unset; 
   flex-wrap: unset;
 }
@@ -181,7 +181,7 @@
   width: 100%;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background: #fff; /* 👈 카드 자체는 흰색 배경 유지 */
+  background: #fff; 
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   text-decoration: none;
   color: #333;
