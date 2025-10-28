@@ -37,7 +37,7 @@ function AssembleDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick
     fetchAllData();
   }, [id, navigate]);
   
-  // 2. 카카오 지도 표시 (로직 동일)
+  // 2. 카카오 지도 표시
   useEffect(() => {
     if (!postData || !window.kakao || !window.kakao.maps) return;
     const { latitude, longitude } = postData;
@@ -57,7 +57,7 @@ function AssembleDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick
     }
   }, [postData]);
   
-  // 3. 신청 버튼 핸들러 (로직 동일)
+  // 3. 신청 버튼 핸들러
   const handleApply = async () => {
     if (!isLoggedIn) {
       alert("신청하려면 로그인이 필요합니다.");
@@ -76,7 +76,7 @@ function AssembleDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick
     }
   };
   
-  // 4. 메시지 등록 핸들러 (로직 동일)
+  // 4. 메시지 등록 핸들러
   const handleSubmitComment = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
@@ -93,15 +93,17 @@ function AssembleDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick
     try {
         await client.post('/matching-comments', commentData);
         setNewComment('');
+        // 메시지 목록만 새로고침
         const response = await client.get(`/matching-comments/matching/${id}`);
         setComments(response.data);
     } catch (error) {
         console.error("메시지 등록 실패:", error.response?.data || error);
+        // 백엔드에서 보낸 권한 오류 메시지 표시
         alert(error.response?.data || "메시지 등록에 실패했습니다."); 
     }
   };
   
-  // 5. 모집 마감 처리 핸들러 (로직 동일)
+  // 5. 모집 마감 처리 핸들러
   const handleClosePost = async () => {
     if (!window.confirm("모집을 마감하면 더 이상 신청을 받을 수 없습니다. 계속하시겠습니까?")) {
         return;
@@ -112,23 +114,22 @@ function AssembleDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick
             status: "모집마감" 
         });
         alert("게시글이 모집 마감되었습니다.");
-        fetchAllData();
+        fetchAllData(); // 상태 변경 후 데이터 새로고침
     } catch (error) {
         console.error("모집 마감 실패:", error);
         alert("모집 마감 처리에 실패했습니다.");
     }
   };
 
-  // 6. [New Logic] 게시글 삭제 핸들러
+  // 6. 게시글 삭제 핸들러
   const handleDeletePost = async () => {
     if (!window.confirm("정말로 이 게시글을 삭제하시겠습니까? 관련 신청 내역과 댓글도 모두 삭제됩니다.")) {
         return;
     }
     try {
-        // 백엔드 API 호출 시 게시글 ID와 사용자 ID 전달
         await client.delete(`/matching/${id}/${currentUser.userId}`);
         alert("게시글이 성공적으로 삭제되었습니다.");
-        navigate('/assemble-board'); // 삭제 후 게시판 목록으로 이동
+        navigate('/assemble-board');
     } catch (error) {
         console.error("게시글 삭제 실패:", error.response?.data || error);
         alert(error.response?.data || "게시글 삭제에 실패했습니다.");
@@ -144,8 +145,11 @@ function AssembleDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick
   const isClosed = postData.status === '모집마감';
   const isLocationValid = postData.latitude !== 0.0 && postData.longitude !== 0.0;
   
-  // 수정된 댓글 권한 확인 로직 (프론트엔드는 일단 UI만 열어줌)
+  // 👇👇👇 핵심 수정: 메시지 작성이 허용되는 조건 수정 👇👇👇
+  // 로그인 되어 있고, 상태가 '모집중' 또는 '모집마감'이면 UI 활성화
+  // (실제 권한: 호스트/수락된 참가자 여부는 백엔드가 검사)
   const isCommentAllowed = isLoggedIn && (isRecruiting || isClosed);
+  // 👆👆👆 핵심 수정 끝 👆👆👆
   
   const mapStyle = { 
       width: '100%', 
@@ -163,36 +167,19 @@ function AssembleDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick
         {/* 게시글 제목 및 버튼 */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', borderBottom: '2px solid #eee', paddingBottom: '15px', marginBottom: '20px' }}>
           <h2 style={{ margin: 0, color: '#FF6B6B' }}>{postData.title}</h2>
-
-          {/* 버튼 그룹 */}
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            {/* 호스트이면서 모집중인 경우 '모집 마감하기' 버튼 */}
             {isHost && isRecruiting && (
-                <button
-                    onClick={handleClosePost}
-                    style={{ background: '#ffc107', color: 'black', border: 'none', padding: '8px 12px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
-                >
+                <button onClick={handleClosePost} style={{ background: '#ffc107', color: 'black', border: 'none', padding: '8px 12px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>
                     🔒 모집 마감하기
                 </button>
             )}
-
-            {/* 👇 게시글 삭제 버튼 (호스트만) 👇 */}
             {isHost && (
-                <button
-                    onClick={handleDeletePost}
-                    style={{ background: '#dc3545', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
-                >
+                <button onClick={handleDeletePost} style={{ background: '#dc3545', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>
                     🗑️ 게시글 삭제
                 </button>
             )}
-
-            {/* 호스트가 아니고 모집중인 경우 '어셈블 신청하기' 버튼 */}
             {!isHost && isRecruiting && (
-                <button
-                    onClick={handleApply}
-                    style={{ background: '#28a745', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
-                    disabled={!isLoggedIn}
-                >
+                <button onClick={handleApply} style={{ background: '#28a745', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }} disabled={!isLoggedIn}>
                     🤝 어셈블 신청하기
                 </button>
             )}
@@ -203,23 +190,17 @@ function AssembleDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick
         <div style={{ lineHeight: 1.8, marginBottom: '30px' }}>
           <p><strong>작성자:</strong> {postData.senderName}</p>
           <p><strong>모임 일시:</strong> {postData.meetingTime}</p>
-          <p><strong>상태:</strong> <span style={{ color: isRecruiting ? '#FF9800' : (isClosed ? '#6c757d' : '#dc3545'), fontWeight: 'bold' }}>{postData.status}</span></p> {/* 모집마감 색상 추가 */}
-          <p style={{ marginTop: '15px', fontSize: '18px' }}>
-            📍 <strong>맛집: {postData.restaurantName}</strong>
-          </p>
+          <p><strong>상태:</strong> <span style={{ color: isRecruiting ? '#FF9800' : (isClosed ? '#6c757d' : '#dc3545'), fontWeight: 'bold' }}>{postData.status}</span></p>
+          <p style={{ marginTop: '15px', fontSize: '18px' }}>📍 <strong>맛집: {postData.restaurantName}</strong></p>
         </div>
 
         {/* 지도 표시 영역 */}
         <div id="assemble-map" style={mapStyle}>
-           {!isLocationValid && (
-               <div style={{ textAlign: 'center', paddingTop: '120px', height: '100%', borderRadius: '10px', backgroundColor: '#f0f0f0' }}>
-                   맛집 위치 정보가 정확하지 않아 지도를 표시할 수 없습니다.
-               </div>
-           )}
+           {!isLocationValid && (<div style={{ textAlign: 'center', paddingTop: '120px', height: '100%', borderRadius: '10px', backgroundColor: '#f0f0f0' }}>맛집 위치 정보가 정확하지 않아 지도를 표시할 수 없습니다.</div>)}
         </div>
-
+        
         <hr style={{ margin: '40px 0' }} />
-
+        
         {/* 메시지 섹션 */}
         <div>
             <h3 style={{ color: '#007bff' }}>모임 메시지 ({comments.length}개)</h3>
@@ -241,15 +222,16 @@ function AssembleDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick
                     <textarea
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
-                        placeholder={isCommentAllowed ? "모임 참가자(호스트, 수락된 신청자)만 메시지를 남길 수 있습니다." : "로그인 후 참가자만 메시지를 남길 수 있습니다."}
+                        // 👇 placeholder 텍스트 수정
+                        placeholder={isCommentAllowed ? "모임 참가자(호스트, 수락된 신청자)만 메시지를 남길 수 있습니다." : "모임이 모집중이거나 마감된 경우에만 메시지를 남길 수 있습니다."}
                         style={{ width: '100%', minHeight: '60px', padding: '5px', boxSizing: 'border-box', marginBottom: '10px' }}
                         required
-                        disabled={!isCommentAllowed} 
+                        disabled={!isCommentAllowed} // 권한(로그인 + 상태) 없으면 비활성화
                     />
                     <button 
                         type="submit" 
                         style={{ background: '#007bff', color: 'white', border: 'none', padding: '8px 15px', borderRadius: '5px' }}
-                        disabled={!isCommentAllowed} 
+                        disabled={!isCommentAllowed} // 권한(로그인 + 상태) 없으면 비활성화
                     >
                         메시지 등록
                     </button>
@@ -268,3 +250,4 @@ function AssembleDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick
 }
 
 export default AssembleDetailPage;
+
