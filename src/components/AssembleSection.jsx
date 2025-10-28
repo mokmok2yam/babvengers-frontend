@@ -1,18 +1,13 @@
 // 파일: src/components/AssembleSection.jsx
 
 import React from 'react';
-import './AssembleSection.css'; // 여기에 AssembleSection 전용 CSS를 추가할 수 있습니다.
+// import './AssembleSection.css'; // ❌ 삭제: 이 파일을 찾을 수 없어 발생한 오류를 해결합니다.
 
 function AssembleSection({ onCreateMapClick }) {
   return (
     <section className="assemble-section"> {/* 이 섹션에 말풍선 스타일을 적용합니다. */}
-      {/* 위쪽 이미지들 (장식용) */}
+      {/* 위쪽 이미지들 (장식용) - food icon 텍스트 문제 해결을 위해 내부 태그 제거 */}
       <div className="assemble-top-deco">
-        {/* 이 부분은 이미지 1에 보이는 상단 아이콘들이라고 가정합니다.
-            실제 프로젝트에 맞게 이 부분을 img 태그들로 채워주세요. */}
-        <img src="/assets/food_icon_1.png" alt="food icon" className="food-icon top-left" />
-        <img src="/assets/food_icon_2.png" alt="food icon" className="food-icon top-center" />
-        <img src="/assets/food_icon_3.png" alt="food icon" className="food-icon top-right" />
       </div>
 
       <div className="assemble-content">
@@ -25,12 +20,8 @@ function AssembleSection({ onCreateMapClick }) {
         </button>
       </div>
 
-      {/* 아래쪽 이미지들 (장식용) */}
+      {/* 아래쪽 이미지들 (장식용) - food icon 텍스트 문제 해결을 위해 내부 태그 제거 */}
       <div className="assemble-bottom-deco">
-        {/* 이 부분은 이미지 1에 보이는 하단 아이콘들이라고 가정합니다.
-            실제 프로젝트에 맞게 이 부분을 img 태그들로 채워주세요. */}
-        <img src="/assets/food_icon_4.png" alt="food icon" className="food-icon bottom-left" />
-        <img src="/assets/food_icon_5.png" alt="food icon" className="food-icon bottom-right" />
       </div>
     </section>
   );

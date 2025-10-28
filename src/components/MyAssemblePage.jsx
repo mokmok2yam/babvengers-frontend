@@ -14,15 +14,16 @@ function MyAssemblePage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, on
     if (!currentUser) return;
     setIsLoading(true);
     try {
-      // Promise.all을 사용해 두 API를 동시에 요청
+      // API 엔드포인트 수정: 받은 요청 (내가 호스트)
       const [receivedRes, sentRes] = await Promise.all([
-        client.get(`/matching/received/${currentUser.userId}`),
-        client.get(`/matching/sent/${currentUser.userId}`)
+        client.get(`/matching/requests/received/${currentUser.userId}`),
+        client.get(`/matching/requests/sent/${currentUser.userId}`)
       ]);
+      
       setReceivedRequests(receivedRes.data);
       setSentRequests(sentRes.data);
     } catch (error) {
-      console.error("매칭 정보를 불러오는 데 실패했습니다:", error);
+      console.error("어셈블 정보를 불러오는 데 실패했습니다:", error);
     } finally {
       setIsLoading(false);
     }
@@ -54,7 +55,7 @@ function MyAssemblePage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, on
     return (
       <>
         <Header isLoggedIn={isLoggedIn} nickname={loginUser?.nickname} onLoginClick={onLoginClick} onSignupClick={onSignupClick} onLogout={onLogout} onHomeClick={() => navigate('/')} />
-        <p style={{ padding: '20px', textAlign: 'center' }}>매칭 정보를 불러오는 중...</p>
+        <p style={{ padding: '20px', textAlign: 'center' }}>어셈블 정보를 불러오는 중...</p>
       </>
     );
   }
@@ -71,11 +72,11 @@ function MyAssemblePage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, on
         borderRadius: '10px',
         boxShadow: '0 4px 10px rgba(0,0,0,0.05)'
       }}>
-        <h2>내 어셈블 관리 🤝</h2>
+        <h2>내 어셈블 관리 🤝 (신청 관리)</h2>
 
-        {/* 받은 요청 섹션 */}
+        {/* 받은 요청 섹션 (내가 호스트) */}
         <section style={{ marginBottom: '40px' }}>
-          <h3 style={{ color: '#4CAF50' }}>받은 요청</h3>
+          <h3 style={{ color: '#4CAF50' }}>받은 신청 (내가 호스트)</h3>
           {receivedRequests.length > 0 ? (
             receivedRequests.map(req => (
               <div key={req.id} style={{ 
@@ -87,7 +88,10 @@ function MyAssemblePage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, on
                 boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
               }}>
                 <p style={{ margin: '0 0 10px' }}>
-                  <strong>'{req.senderName}'</strong>님이 <Link to={`/map/${req.mapCollectionId}`} style={{ color: '#007bff' }}><strong>'{req.mapName}'</strong></Link> 지도 기반으로 어셈블을 요청했습니다.
+                  <strong>'{req.senderName}'</strong>님이 <strong style={{ color: '#FF9800' }}>'{req.title}'</strong> 모임에 신청했습니다.
+                </p>
+                <p style={{ margin: '0 0 10px', fontSize: '14px', color: '#555' }}>
+                  📍 맛집: {req.restaurantName} | 📅 시간: {req.meetingTime}
                 </p>
                 <p style={{ fontWeight: 'bold', color: req.status === '요청됨' ? '#FF9800' : (req.status === '수락됨' ? '#28a745' : '#dc3545') }}>
                     상태: {req.status}
@@ -100,12 +104,12 @@ function MyAssemblePage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, on
                 )}
               </div>
             ))
-          ) : <p style={{ padding: '15px', border: '1px dashed #ccc', borderRadius: '8px', textAlign: 'center', backgroundColor: '#f9f9f9' }}>받은 요청이 없습니다.</p>}
+          ) : <p style={{ padding: '15px', border: '1px dashed #ccc', borderRadius: '8px', textAlign: 'center', backgroundColor: '#f9f9f9' }}>받은 신청이 없습니다.</p>}
         </section>
 
-        {/* 보낸 요청 섹션 */}
+        {/* 보낸 요청 섹션 (내가 신청자) */}
         <section>
-          <h3 style={{ color: '#FF6B6B' }}>보낸 요청</h3>
+          <h3 style={{ color: '#FF6B6B' }}>보낸 신청 (내가 신청자)</h3>
           {sentRequests.length > 0 ? (
             sentRequests.map(req => (
               <div key={req.id} style={{ 
@@ -117,14 +121,17 @@ function MyAssemblePage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, on
                 boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
               }}>
                 <p style={{ margin: '0 0 10px' }}>
-                  <strong>'{req.receiverName}'</strong>님에게 <Link to={`/map/${req.mapCollectionId}`} style={{ color: '#007bff' }}><strong>'{req.mapName}'</strong></Link> 지도로 어셈블을 요청했습니다.
+                  <strong>'{req.receiverName}'</strong>님(호스트)의 <strong style={{ color: '#FF9800' }}>'{req.title}'</strong> 모임에 신청했습니다.
+                </p>
+                <p style={{ margin: '0 0 10px', fontSize: '14px', color: '#555' }}>
+                  📍 맛집: {req.restaurantName} | 📅 시간: {req.meetingTime}
                 </p>
                 <p style={{ fontWeight: 'bold', color: req.status === '요청됨' ? '#FF9800' : (req.status === '수락됨' ? '#28a745' : '#dc3545') }}>
                     상태: {req.status}
                 </p>
               </div>
             ))
-          ) : <p style={{ padding: '15px', border: '1px dashed #ccc', borderRadius: '8px', textAlign: 'center', backgroundColor: '#f9f9f9' }}>보낸 요청이 없습니다.</p>}
+          ) : <p style={{ padding: '15px', border: '1px dashed #ccc', borderRadius: '8px', textAlign: 'center', backgroundColor: '#f9f9f9' }}>보낸 신청이 없습니다.</p>}
         </section>
       </div>
     </>

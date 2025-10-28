@@ -8,7 +8,9 @@ import MyMapsPage from './components/MyMapsPage';
 import MapDetailPage from './components/MapDetailPage';
 import CommunityMapsPage from './components/CommunityMapsPage';
 import MyAssemblePage from './components/MyAssemblePage';
-import MyReviewsPage from './components/MyReviewsPage.jsx'; // 👈 1. 임포트 추가
+import MyReviewsPage from './components/MyReviewsPage.jsx'; 
+import AssembleBoardPage from './components/AssembleBoardPage.jsx'; 
+import AssembleDetailPage from './components/AssembleDetailPage.jsx'; // 👈 AssembleDetailPage 임포트 추가
 import './App.css';
 
 function App() {
@@ -66,7 +68,16 @@ function App() {
           path="/my-assemble" 
           element={ <MyAssemblePage isLoggedIn={isLoggedIn} loginUser={loginUser} onLoginClick={() => setIsLoginOpen(true)} onSignupClick={() => setIsSignupOpen(true)} onLogout={handleLogout} /> } 
         />
-        {/* 👇 2. '내 리뷰 관리' 페이지를 위한 Route 추가 */}
+        <Route 
+          path="/assemble-board" 
+          element={ <AssembleBoardPage isLoggedIn={isLoggedIn} loginUser={loginUser} onLoginClick={() => setIsLoginOpen(true)} onSignupClick={() => setIsSignupOpen(true)} onLogout={handleLogout} /> } 
+        />
+        {/* 👇 어셈블 상세 페이지 Route 추가 */}
+        <Route 
+          path="/assemble/:id" 
+          element={ <AssembleDetailPage isLoggedIn={isLoggedIn} loginUser={loginUser} onLoginClick={() => setIsLoginOpen(true)} onSignupClick={() => setIsSignupOpen(true)} onLogout={handleLogout} /> } 
+        />
+
         <Route 
           path="/my-reviews" 
           element={ <MyReviewsPage isLoggedIn={isLoggedIn} loginUser={loginUser} onLoginClick={() => setIsLoginOpen(true)} onSignupClick={() => setIsSignupOpen(true)} onLogout={handleLogout} /> } 
