@@ -13,24 +13,37 @@ function MainPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onLogout
   // 상태 초기화 및 관리
   const [topRatedMaps, setTopRatedMaps] = useState([]);
   const [mostReviewedMaps, setMostReviewedMaps] = useState([]);
-  
-  // 관리자가 선정한 지도 (임시 데이터)
-  const adminPicks = [
-    { id: 0, name: '스윙스가 인정한 돈까스', averageRating: 5.0, reviewCount: 99, nickname: '밥벤저스' },
-    { id: 1, name: '혼밥하기 좋은 국밥집', averageRating: 4.8, reviewCount: 102, nickname: '밥벤저스' },
-  ];
+  // 👇 [수정] 관리자 선정 지도 상태를 추가하고 초기값은 빈 배열로 설정
+  const [adminPicks, setAdminPicks] = useState([]);
 
   // API 호출로 데이터 가져오기 (마운트 시 실행)
   useEffect(() => {
-    // API 주소 및 호출 방식은 사용자 프로젝트 환경에 맞춰 조정하세요.
-    client.get('/map-collections?sortBy=averageRating')
-      .then(response => setTopRatedMaps(response.data))
-      .catch(error => console.error("Error fetching top rated maps:", error));
-      
-    client.get('/map-collections?sortBy=reviewCount')
-      .then(response => setMostReviewedMaps(response.data))
-      .catch(error => console.error("Error fetching most reviewed maps:", error));
-  }, []);
+    // API 호출을 처리하는 함수
+    const fetchMapData = async () => {
+        // 1. 별점 높은 맛집 지도
+        client.get('/map-collections?sortBy=averageRating')
+          .then(response => setTopRatedMaps(response.data))
+          .catch(error => console.error("Error fetching top rated maps:", error));
+          
+        // 2. 리뷰 많은 맛집 지도
+        client.get('/map-collections?sortBy=reviewCount')
+          .then(response => setMostReviewedMaps(response.data))
+          .catch(error => console.error("Error fetching most reviewed maps:", error));
+          
+        // 👇 3. [추가] 밥벤저스 선정 맛집 지도 (닉네임 '밥벤저스'로 조회)
+        const adminNickname = '밥벤저스'; // 사용할 닉네임 (DB의 6번 ID 닉네임)
+        try {
+            // 새로 만든 백엔드 API 엔드포인트 호출
+            const adminPicksResponse = await client.get(`/map-collections/creator-nickname/${adminNickname}`);
+            setAdminPicks(adminPicksResponse.data); // 응답 데이터를 상태에 저장
+        } catch (error) {
+            console.error("Error fetching admin picks maps:", error);
+            setAdminPicks([]); 
+        }
+    };
+    
+    fetchMapData();
+  }, []); // 마운트 시 한 번만 실행
 
   return (
     <>
@@ -53,6 +66,7 @@ function MainPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onLogout
         <Slider 
           topRatedMaps={topRatedMaps}
           mostReviewedMaps={mostReviewedMaps}
+          // 👇 [수정] adminPicks 상태를 Slider 컴포넌트에 전달
           adminPicks={adminPicks}
         />
         

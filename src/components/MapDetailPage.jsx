@@ -1,3 +1,5 @@
+// 파일: src/components/MapDetailPage.jsx
+
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from './Header';
@@ -115,24 +117,6 @@ function MapDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onL
     }
   };
 
-  const handleMatchingRequest = async () => {
-    if (!isLoggedIn) {
-      alert("로그인이 필요합니다.");
-      onLoginClick();
-      return;
-    }
-    const requestData = { senderId: currentUser.userId, receiverId: mapData.authorId, mapCollectionId: mapData.id };
-    if (window.confirm(`'${mapData.nickname}'님에게 이 지도를 기반으로 매칭을 요청하시겠습니까?`)) {
-      try {
-        await client.post('/matching', requestData);
-        alert("매칭 요청을 보냈습니다! '내 어셈블 관리' 페이지에서 요청 상태를 확인할 수 있습니다.");
-      } catch (error) {
-        console.error("매칭 요청 실패:", error);
-        alert("매칭 요청에 실패했습니다.");
-      }
-    }
-  };
-
   const handleDeleteReview = async (reviewId) => {
     if (window.confirm("정말로 리뷰를 삭제하시겠습니까?")) {
       try {
@@ -175,14 +159,6 @@ function MapDetailPage({ isLoggedIn, loginUser, onLoginClick, onSignupClick, onL
       <div style={{ padding: '20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
           <h2>{mapData.name}</h2>
-          {isLoggedIn && currentUser?.userId !== mapData.authorId && (
-            <button
-              onClick={handleMatchingRequest}
-              style={{ background: '#28a745', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
-            >
-              🤝 어셈블 요청하기!
-            </button>
-          )}
         </div>
         <p>작성자: {mapData.nickname}</p>
 
